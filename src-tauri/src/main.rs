@@ -82,6 +82,47 @@ fn ui_ready() {
 }
 
 #[tauri::command]
+fn toggle_autostart(enable: bool) -> Result<String, String> {
+    let exe_path = std::env::current_exe().map_err(|e| e.to_string())?;
+    let exe_path_str = exe_path.to_str().unwrap_or_default();
+    
+    let key_path = r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#;
+    let app_name = "ForzaRP";
+
+    if enable {
+        let status = std::process::Command::new("reg")
+            .args(&["add", key_path, "/v", app_name, "/t", "REG_SZ", "/d", &format!("\"{}\"", exe_path_str), "/f"])
+            .creation_flags(0x08000000)
+            .status()
+            .map_err(|e| e.to_string())?;
+        
+        if status.success() { Ok("Enabled".into()) } else { Err("Failed".into()) }
+    } else {
+        let status = std::process::Command::new("reg")
+            .args(&["delete", key_path, "/v", app_name, "/f"])
+            .creation_flags(0x08000000)
+            .status()
+            .map_err(|e| e.to_string())?;
+            
+        if status.success() { Ok("Disabled".into()) } else { Err("Failed".into()) }
+    }
+}
+
+#[tauri::command]
+fn is_autostart_enabled() -> Result<bool, String> {
+    let key_path = r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#;
+    let app_name = "ForzaRP";
+    
+    let output = std::process::Command::new("reg")
+        .args(&["query", key_path, "/v", app_name])
+        .creation_flags(0x08000000)
+        .output()
+        .map_err(|e: std::io::Error| e.to_string())?;
+        
+    Ok(output.status.success())
+}
+
+#[tauri::command]
 fn hide_window(window: tauri::Window) {
     let _ = window.hide();
 }
@@ -223,6 +264,8 @@ fn main() {
             fix_uwp_isolation,
             check_uwp_status,
             check_db_updates,
+            toggle_autostart,
+            is_autostart_enabled,
             hide_window,
             ui_ready
         ])

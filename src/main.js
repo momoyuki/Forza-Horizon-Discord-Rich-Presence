@@ -73,6 +73,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Check Autostart Status
+  const autostartCheck = document.getElementById("autostart-check");
+
+  async function checkAutostart() {
+    try {
+      const isEnabled = await invoke("is_autostart_enabled");
+      autostartCheck.checked = isEnabled;
+    } catch (error) {
+      console.error("Failed to check autostart:", error);
+    }
+  }
+
+  autostartCheck.addEventListener("change", async (e) => {
+    autostartCheck.disabled = true;
+    try {
+      await invoke("toggle_autostart", { enable: e.target.checked });
+    } catch (error) {
+      console.error("Failed to toggle autostart:", error);
+      // Revert if failed
+      autostartCheck.checked = !e.target.checked;
+    } finally {
+      autostartCheck.disabled = false;
+    }
+  });
+
+  // Call it on load
+  checkAutostart();
+
   // Start Minimized Setting
   const startMinimizedCheck = document.getElementById("start-minimized-check");
   const autoUpdateCheck = document.getElementById("auto-update-check");
