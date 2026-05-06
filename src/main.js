@@ -126,9 +126,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!hasRunBefore) {
     // First run: keep window visible
     localStorage.setItem("has_run_before", "true");
-  } else if (startMinimized === "true") {
-    // Not first run and setting is on: hide
-    invoke("hide_window").catch(console.error);
+    invoke("show_window").catch(console.error);
+  } else if (startMinimized !== "true") {
+    // Not first run and setting is off: show
+    invoke("show_window").catch(console.error);
   }
 
   // Automatic update on startup

@@ -88,7 +88,7 @@ fn toggle_autostart(enable: bool) -> Result<String, String> {
     let exe_path_str = exe_path.to_str().unwrap_or_default();
     
     let key_path = r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#;
-    let app_name = "forzarpc";
+    let app_name = "forzarichpresence";
 
     if enable {
         let status = std::process::Command::new("reg")
@@ -112,7 +112,7 @@ fn toggle_autostart(enable: bool) -> Result<String, String> {
 #[tauri::command]
 fn is_autostart_enabled() -> Result<bool, String> {
     let key_path = r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#;
-    let app_name = "forzarpc";
+    let app_name = "forzarichpresence";
     
     let output = std::process::Command::new("reg")
         .args(&["query", key_path, "/v", app_name])
@@ -126,6 +126,12 @@ fn is_autostart_enabled() -> Result<bool, String> {
 #[tauri::command]
 fn hide_window(window: tauri::Window) {
     let _ = window.hide();
+}
+
+#[tauri::command]
+fn show_window(window: tauri::Window) {
+    let _ = window.show();
+    let _ = window.set_focus();
 }
 
 fn create_tray(app: &tauri::App) -> Result<(), Box<dyn std::error::Error>> {
@@ -279,6 +285,7 @@ fn main() {
             toggle_autostart,
             is_autostart_enabled,
             hide_window,
+            show_window,
             ui_ready
         ])
         .run(tauri::generate_context!())

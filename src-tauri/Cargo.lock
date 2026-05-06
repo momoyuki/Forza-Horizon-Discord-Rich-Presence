@@ -1089,7 +1089,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "forzarp"
+name = "forzarichpresence"
 version = "0.1.0"
 dependencies = [
  "discord-rich-presence",

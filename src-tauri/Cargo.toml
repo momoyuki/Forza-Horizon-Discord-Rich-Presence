@@ -1,5 +1,5 @@
 [package]
-name = "forzarpc"
+name = "forzarichpresence"
 version = "0.1.0"
 description = "Forza Horizon Discord Rich Presence"
 authors = ["you"]

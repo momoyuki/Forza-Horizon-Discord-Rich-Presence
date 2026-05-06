@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "forzarpc",
+  "productName": "forzarichpresence",
   "version": "0.1.0",
   "identifier": "com.forzarp.app",
   "build": {
@@ -10,10 +10,11 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "Forza Horizon RPC Settings",
+        "title": "Forza Rich Presence Settings",
         "width": 530,
         "height": 220,
-        "resizable": false
+        "resizable": false,
+        "visible": false
       }
     ],
     "security": {
