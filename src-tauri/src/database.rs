@@ -55,8 +55,7 @@ impl CarDatabase {
         
         let client = reqwest::Client::new();
         // Replace with actual URL when ready. For now, we simulate success if offline or fail gracefully.
-        // TODO: Replace with your actual GitHub repository URL once created
-        let target_url = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO_NAME/main/cars.json"; 
+        let target_url = "https://raw.githubusercontent.com/1Stalk/Forza-Horizon-Discord-Rich-Presence/main/src-tauri/cars.json"; 
         
         match client.get(target_url).send().await {
             Ok(response) => {

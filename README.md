@@ -13,7 +13,7 @@ Works with **Forza Horizon 4** and **Forza Horizon 5**
 
 ## Setup Guide
 
-1. Launch forzarichpresence.exe
+1. Launch forzarichpresence.exe (download from [releases](https://github.com/1Stalk/Forza-Horizon-Discord-Rich-Presence/releases/))
 2. Launch Forza Horizon and go to **Settings** -> **HUD and Gameplay**.
 3. Scroll to the bottom and configure the **Data Out** settings:
    - **Data Out:** `ON`
