@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const isFixedBackend = await invoke("check_uwp_status");
       const isFixedLocal = localStorage.getItem("uwp_fixed") === "true";
-      
+
       if (isFixedBackend || isFixedLocal) {
         fixUwpBtn.classList.add("hidden");
         uwpSuccess.classList.remove("hidden");
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check DB Updates Button
   updateDbBtn.addEventListener("click", async () => {
     updateDbBtn.disabled = true;
-    
+
     // Animate button
     updateDbBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="animation: rotateBg 2s linear infinite;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Checking...`;
 
@@ -104,10 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Start Minimized Setting
   const startMinimizedCheck = document.getElementById("start-minimized-check");
   const autoUpdateCheck = document.getElementById("auto-update-check");
-  
+
   // Default values
   const hasRunBefore = localStorage.getItem("has_run_before");
-  
+
   let startMinimized = localStorage.getItem("start_minimized");
   if (startMinimized === null) {
     startMinimized = "true";
@@ -154,8 +154,8 @@ document.addEventListener("DOMContentLoaded", () => {
       pulseDot.classList.add("active");
       pulseDot.classList.add("active-pulse");
       pulseDot.style.animationName = "pulse-success";
-      
-      statusText.textContent = `Connected to ${game}`;
+
+      statusText.textContent = `${game}`;
       statusText.style.color = "var(--success-color)";
       statusDetail.textContent = details || "Broadcasting presence to Discord.";
     } else {
@@ -163,12 +163,12 @@ document.addEventListener("DOMContentLoaded", () => {
       pulseDot.classList.remove("active-pulse");
       pulseDot.style.animationName = "pulse";
 
-      statusText.textContent = "Waiting for Game...";
+      statusText.textContent = "Waiting...";
       statusText.style.color = "inherit";
-      statusDetail.textContent = "Launch Forza Horizon 4 to begin broadcasting your presence.";
+      statusDetail.textContent = details || "Launch game to broadcast";
     }
+  }).then(() => {
+    // Tell backend we are ready to receive initial status
+    invoke("ui_ready").catch(console.error);
   });
-
-  // Tell backend we are ready to receive initial status
-  invoke("ui_ready").catch(console.error);
 });

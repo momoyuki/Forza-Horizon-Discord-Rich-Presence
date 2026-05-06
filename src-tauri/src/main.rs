@@ -22,6 +22,7 @@ use telemetry::{TelemetryServer, TelemetryData};
 
 struct AppState {
     modules: Vec<Arc<dyn GameModule>>,
+    active_game: Arc<Mutex<Option<String>>>,
 }
 
 #[tauri::command]
@@ -77,8 +78,21 @@ async fn check_uwp_status(state: tauri::State<'_, AppState>) -> Result<bool, Str
 }
 
 #[tauri::command]
-fn ui_ready() {
-    // Frontend is ready to receive status updates
+fn ui_ready(app: tauri::AppHandle, state: tauri::State<'_, AppState>) {
+    let game = state.active_game.lock().unwrap().clone();
+    if let Some(game_name) = game {
+        let _ = app.emit("status_update", serde_json::json!({
+            "status": "connected",
+            "game": game_name,
+            "details": "Broadcasting presence..."
+        }));
+    } else {
+        let _ = app.emit("status_update", serde_json::json!({
+            "status": "disconnected",
+            "game": "",
+            "details": "Launch game to broadcast"
+        }));
+    }
 }
 
 #[tauri::command]
@@ -182,8 +196,11 @@ fn main() {
                 Arc::new(FH5Module),
             ];
 
+            let active_game = Arc::new(Mutex::new(None));
+            
             app.manage(AppState {
                 modules: modules.clone(),
+                active_game: active_game.clone(),
             });
 
             // Start background monitor task
@@ -216,6 +233,7 @@ fn main() {
                         if !is_game_running {
                             // Game started
                             is_game_running = true;
+                            *active_game.lock().unwrap() = Some(module.game_name().to_string());
                             println!("Game started: {}", module.game_name());
                             
                             let (tx, _) = broadcast::channel::<TelemetryData>(16);
@@ -251,6 +269,7 @@ fn main() {
                     } else if is_game_running {
                         // Game stopped
                         is_game_running = false;
+                        *active_game.lock().unwrap() = None;
                         println!("Game stopped.");
                         
                         server.stop();
@@ -262,7 +281,7 @@ fn main() {
                         let _ = app_handle_clone.emit("status_update", serde_json::json!({
                             "status": "disconnected",
                             "game": "",
-                            "details": "Waiting for game..."
+                            "details": "Launch game to broadcast"
                         }));
                     }
 
