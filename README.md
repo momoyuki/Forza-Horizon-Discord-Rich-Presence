@@ -1,11 +1,13 @@
 # Forza Horizon Discord Rich Presence
 
 Works with **Forza Horizon 4** and **Forza Horizon 5** 
+
 **Forza Horizon 6** coming soon (needs proper database with cars)
 
 <p align="center">
-  <img src="assets/settings.png" width="48%" alt="Application Interface" />
-  &nbsp;&nbsp;
+  <img src="assets/settings.png" width="70%" alt="Application Interface" />
+</p>
+<p align="center">
   <img src="assets/fh4status.png" width="45%" alt="Discord Status Example" />
 </p>
 
