@@ -214,4 +214,12 @@ document.addEventListener("DOMContentLoaded", () => {
     invoke("ui_ready").catch(console.error);
     invoke("update_xbl_settings", { apiKey: savedXblKey }).catch(console.error);
   });
+
+  // Handle external links
+  document.querySelectorAll('a[target="_blank"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      invoke("open_url", { url: link.href }).catch(console.error);
+    });
+  });
 });

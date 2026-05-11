@@ -144,6 +144,14 @@ fn update_xbl_settings(api_key: String, state: tauri::State<'_, AppState>) {
 }
 
 #[tauri::command]
+fn open_url(url: String) {
+    let _ = std::process::Command::new("cmd")
+        .args(&["/c", "start", "", &url])
+        .creation_flags(0x08000000)
+        .spawn();
+}
+
+#[tauri::command]
 fn toggle_autostart(enable: bool) -> Result<String, String> {
     let exe_path = std::env::current_exe().map_err(|e| e.to_string())?;
     let exe_path_str = exe_path.to_str().unwrap_or_default();
@@ -404,7 +412,8 @@ fn main() {
             hide_window,
             show_window,
             ui_ready,
-            update_xbl_settings
+            update_xbl_settings,
+            open_url
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
