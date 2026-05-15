@@ -18,7 +18,7 @@ use tokio::sync::broadcast;
 
 use database::CarDatabase;
 use discord::DiscordService;
-use modules::{fh4::FH4Module, fh5::FH5Module, GameModule};
+use modules::{fh4::FH4Module, fh5::FH5Module, fh6::FH6Module, GameModule};
 use telemetry::{TelemetryServer, TelemetryData};
 
 #[derive(Clone, serde::Deserialize)]
@@ -299,6 +299,7 @@ fn main() {
             let modules: Vec<Arc<dyn GameModule>> = vec![
                 Arc::new(FH4Module),
                 Arc::new(FH5Module),
+                Arc::new(FH6Module),
             ];
 
             let active_game = Arc::new(Mutex::new(None));
@@ -340,7 +341,7 @@ fn main() {
                     for module in &modules {
                         let process_name = module.target_process_name();
                         for process in sys.processes().values() {
-                            if process.name() == process_name {
+                            if process.name().eq_ignore_ascii_case(process_name) {
                                 active_module = Some(module.clone());
                                 break;
                             }

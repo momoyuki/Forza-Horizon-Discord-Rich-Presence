@@ -1,5 +1,6 @@
 pub mod fh4;
 pub mod fh5;
+pub mod fh6;
 
 pub trait GameModule: Send + Sync {
     fn target_process_name(&self) -> &'static str;
